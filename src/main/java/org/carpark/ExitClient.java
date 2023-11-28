@@ -1,4 +1,4 @@
-package org.example;
+package org.carpark;
 
 import java.io.BufferedReader;
 import java.io.IOException;
