@@ -8,20 +8,23 @@ public class ExitThread extends ServerThread{
     }
 
     @Override
-    public String handleRequest() throws InterruptedException {
-        if(Server.getCount() <= 0) return "FAILURE";
+    public String handleRequest() {
+        // Abort if car park is already empty; this should only occur when the programs are used improperly,
+        // e.g. in testing
+        if(Server.getCount() <= 0) return "FAILURE: Car park already empty";
+        // If lock is not engaged, go straight to engaging lock and decrementing count
         if(Server.getLockThreadID() == null) {
-            switch(Server.AdjustCount(this.threadID, false)){
-                case 1:
-                    return "OK";
-                default:
-                    return "ERROR";
+            try{
+                Server.AdjustCount(this.threadID, false);
+                return "OK";
+            } catch (Exception e){
+                return "ERROR";
             }
-
         }
+        // If lock is engaged, add to exit queue instead
         else {
             Server.exitQueue++;
-            return "QUEUED";
+            return "OK: Car will exit when queue begins emptying";
         }
     }
 }
