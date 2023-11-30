@@ -16,10 +16,10 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException {
-        new Server().initialise();
+        initialise();
     }
 
-    public void initialise() throws IOException {
+    public static void initialise() throws IOException {
         // Open socket for entrance clients to connect
         ServerSocket entranceSocket = new ServerSocket(1234);
         System.out.println("Entrance sockets open, awaiting connection...");
@@ -44,17 +44,17 @@ public class Server {
     }
 
     // Method for getting lock and adjusting count; one method is used for both exit and entrance for simplicity
-    public static void AdjustCount(String threadID, boolean increment) throws Exception {
+    public static void AdjustCount(String threadID, int difference) throws Exception {
         // Engage lock using thread ID; the ternary operator and if/return combination is used to ensure that the lock
         // is unengaged, in case this function is called when the lock is engaged through some kind of concurrency mishap
         lockThreadID = (lockThreadID != null) ? lockThreadID : threadID;
         // In case function was called erroneously, check lock and throw exception if held by other thread
         if(!lockThreadID.equals(threadID)) throw new Exception();
-        // Queue is emptied
-        EmptyQueue();
-        // Count is either incremented or decremented. This could equally be done with an integer parameter but this
-        // approach leaves less room for error
-        count += (increment) ? 1 : -1;
+        // Queue is emptied if count + difference > 0
+        if(count + difference > 0)
+            EmptyQueue();
+        // Count is either incremented or decremented.
+        count += difference;
         // Lock disengaged; function ends successfully
         lockThreadID = null;
     }

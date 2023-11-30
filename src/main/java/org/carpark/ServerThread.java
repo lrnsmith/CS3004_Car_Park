@@ -30,7 +30,7 @@ public abstract class ServerThread extends Thread {
                 // Print information for transparency
                 System.out.println(this.threadID+": "+message+" | RESPONSE: "+response+" | COUNT: "+Server.getCount() + " | LOCK: "+Server.getLockThreadID());
                 // Send response to request
-                printWriter.println(response);
+                printWriter.println(response + " | Car park has " + (6-Server.getCount()) + " free spaces." );
             }
         } catch (IOException e) {
             e.printStackTrace();

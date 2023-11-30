@@ -15,7 +15,7 @@ public class ExitThread extends ServerThread{
         // If lock is not engaged, go straight to engaging lock and decrementing count
         if(Server.getLockThreadID() == null) {
             try{
-                Server.AdjustCount(this.threadID, false);
+                Server.AdjustCount(this.threadID, -1);
                 return "OK";
             } catch (Exception e){
                 return "ERROR";
